@@ -8,6 +8,9 @@ package com.jonathantey.breakout;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,7 +21,7 @@ import com.jonathantey.model.Paddle;
 import java.io.Serializable;
 
 
-public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Serializable{
+public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Serializable, SensorEventListener {
 
     public static int WIDTH = 0;
     public static int HEIGHT = 0;
@@ -102,7 +105,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
             if(!gameStarted){
                 gameStarted = true;
                 ball.setVector(ballSpeed, -ballSpeed);
-                paddle.update((int)event.getX() - paddle.getWidth()/2);
+                paddle.update((int) event.getX() - paddle.getWidth() / 2);
             }
             return true;
         }
@@ -130,16 +133,32 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
                 System.out.println("Paddle Top : " + paddle.getRectangle().top + "-Paddle Bottom : " + paddle.getRectangle().bottom
                         + "-Paddle Left : " + paddle.getRectangle().left + "-Paddle Right : " + paddle.getRectangle().right);
                 if (ball.getRectangle().bottom > paddle.getRectangle().top
+                        && ball.getRectangle().bottom < paddle.getRectangle().top + collisionBuffer
                         && ( ball.getRectangle().left + collisionBuffer < paddle.getRectangle().right
                         && ball.getRectangle().right > paddle.getRectangle().left + collisionBuffer)) {
+                    //Top collision detecion
                     ball.setY(paddle.getRectangle().top - ball.getR());
                     ball.setDy(-ball.getDy());
-                }else if(ball.getRectangle().bottom > paddle.getRectangle().top
-                        && ball.getRectangle().bottom < paddle.getRectangle().bottom + collisionBuffer ){
+
+                    System.out.println("Top Collision Occured");
+                }else if(ball.getRectangle().bottom >= paddle.getRectangle().top
+                        && ball.getRectangle().top < paddle.getRectangle().top + collisionBuffer ){
+                    //Side collision detection
+                    if(ball.getRectangle().centerX() < paddle.getRectangle().centerX()){
+                        ball.setX(paddle.getX() - ball.getR());
+                    }else{
+                        ball.setX(paddle.getX() + paddle.getWidth() + ball.getR());
+                    }
+
                     ball.setDx(-ball.getDx());
                     ball.setDy(-ball.getDy());
+
+                    System.out.println("Side Collision Occured");
                 }else{
+                    //Other collision detection
                     ball.setDx(-ball.getDx());
+
+                    System.out.println("Other Collision Occured");
                 }
             }
 
@@ -159,5 +178,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
             paddle.draw(canvas);
             ball.draw(canvas);
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

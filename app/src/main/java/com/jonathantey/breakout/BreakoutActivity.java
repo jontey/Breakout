@@ -15,7 +15,7 @@ public class BreakoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Set the ContentView of the main activity to be the Game Panel
-        setContentView(R.layout.activity_breakout);
+        setContentView(R.layout.breakout_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         RelativeLayout gameLayout = (RelativeLayout) findViewById(R.id.gameLayout);
@@ -30,6 +30,8 @@ public class BreakoutActivity extends AppCompatActivity {
 
         gameLayout.addView(gamePanel);
         System.out.println("onCreate called");
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     }
 

@@ -25,7 +25,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
 
     public static int WIDTH = 0;
     public static int HEIGHT = 0;
-    //Collision buffer to elemenate false detection.
+    //Collision buffer to eliminate false detection.
     public static int collisionBuffer = 10;
 
     private TimerThread thread;
@@ -54,12 +54,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
      */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        WIDTH = getWidth();
-        HEIGHT = getHeight();
-        System.out.println("surfaceCreated called View Width = " + WIDTH + "    View Height = " + HEIGHT);
-        //Initiate all game objects
-        paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/6, getWidth()/6, getWidth()/18);
-        ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,getWidth()/24);
+        resetGame(); //Initalize new game variables
 
         thread = new TimerThread(getHolder(), this);
         thread.setRunning(true);
@@ -126,6 +121,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
      */
     public void update() {
         if(gameStarted){
+            if(!ball.isInPlay()){
+                resetGame(); //Ball is out of bounds.. reset game
+                return;
+            }
             //Paddle vs Ball collision detection
             if (Rect.intersects(ball.getRectangle(), paddle.getRectangle())) {
                 System.out.println("Ball Top : " + ball.getRectangle().top + "-Ball Bottom : " + ball.getRectangle().bottom
@@ -168,6 +167,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
 
             ball.update();
         }
+    }
+
+    //Reset all game variables
+    public void resetGame(){
+        gameStarted = false;
+        WIDTH = getWidth();
+        HEIGHT = getHeight();
+        System.out.println("surfaceCreated called View Width = " + WIDTH + "    View Height = " + HEIGHT);
+        //Initiate all game objects
+        paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/6, getWidth()/6, getWidth()/18);
+        ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,getWidth()/24);
     }
 
     @Override

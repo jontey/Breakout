@@ -30,7 +30,7 @@ public class Leaderboard extends AppCompatActivity {
         Intent intent = getIntent();
         int score = intent.getIntExtra("score", -1);
 
-        db = new database(this.getBaseContext(), "database.txt");
+        db = new database(getBaseContext(), "leaderboard.txt");
         /**
          * @TODO - Based on score check if score is on leaderboard or not
          * I think maybe check with the worst score - J

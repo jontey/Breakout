@@ -1,0 +1,12 @@
+diff a/app/src/main/java/com/jonathantey/breakout/GamePanel.java b/app/src/main/java/com/jonathantey/breakout/GamePanel.java	(rejected hunks)
+@@ -121,6 +121,10 @@
+      */
+     public void update() {
+         if(gameStarted){
++            if(!ball.isInPlay()){
++                resetGame(); //Ball is out of bounds.. reset game
++                return;
++            }
+             //Paddle vs Ball collision detection
+             if (Rect.intersects(ball.getRectangle(), paddle.getRectangle())) {
+                 System.out.println("Ball Top : " + ball.getRectangle().top + "-Ball Bottom : " + ball.getRectangle().bottom

@@ -8,9 +8,7 @@ package com.jonathantey.breakout;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,13 +19,14 @@ import com.jonathantey.model.Paddle;
 import java.io.Serializable;
 
 
-public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Serializable, SensorEventListener {
+public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Serializable{
 
     public static int WIDTH = 0;
     public static int HEIGHT = 0;
     //Collision buffer to elemenate false detection.
     public static int collisionBuffer = 10;
 
+    private SensorManager sensorManager;
     private TimerThread thread;
     private boolean gameStarted;
     private Paddle paddle;
@@ -57,10 +56,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         WIDTH = getWidth();
         HEIGHT = getHeight();
         System.out.println("surfaceCreated called View Width = " + WIDTH + "    View Height = " + HEIGHT);
+        //Initialize the Sensor
         //Initiate all game objects
-        paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/6, getWidth()/6, getWidth()/18);
+        paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/5, getWidth()/6, getWidth()/18);
         ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,getWidth()/24);
-
         thread = new TimerThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
@@ -105,6 +104,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
             if(!gameStarted){
                 gameStarted = true;
                 ball.setVector(ballSpeed, -ballSpeed);
+                ball.setMaxSpeed(ballSpeed);
                 paddle.update((int) event.getX() - paddle.getWidth() / 2);
             }
             return true;
@@ -180,13 +180,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         }
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    public void updateRotationSensor(float xRotation) {
+        if(gameStarted){
+            ball.setDx(ball.getDx() + -(int)xRotation);
+            System.out.println("X = " + (int)xRotation);
+        }
 
     }
 }

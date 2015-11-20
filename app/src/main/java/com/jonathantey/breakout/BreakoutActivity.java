@@ -1,5 +1,6 @@
 package com.jonathantey.breakout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 
 public class BreakoutActivity extends AppCompatActivity {
 
+    private database db;
     private GamePanel gamePanel = null;
     private RotationSensor rotationSensor;
 
@@ -30,12 +32,14 @@ public class BreakoutActivity extends AppCompatActivity {
             System.out.println("Create new Game Panel");
         }
 
+        //gamePanel.setSystemUiVisibility( gamePanel.SYSTEM_UI_FLAG_HIDE_NAVIGATION );
         gameLayout.addView(gamePanel);
         System.out.println("onCreate called");
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         rotationSensor = new RotationSensor(this);
+        db = new database(getBaseContext(), "leaderboard.txt");
     }
 
     @Override
@@ -52,9 +56,21 @@ public class BreakoutActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        //Start new game
+        if(id == R.id.action_newgame){
+            gamePanel.resetGame();
+        }
+        //Open leaderboard
+        if (id == R.id.action_leaderboard) {
+            Intent intent = new Intent(findViewById(R.id.toolbar).getContext(), Leaderboard.class);
+            intent.putExtra("score", -1);
+            findViewById(R.id.toolbar).getContext().startActivity(intent);
             return true;
+        }
+
+        if(id == R.id.action_quit){
+            db.saveDatabase();
+            this.finishAffinity();
         }
 
         return super.onOptionsItemSelected(item);

@@ -60,6 +60,7 @@ public class database {
 			}
 			
 		} catch (Exception e){
+			saveDatabase();
 			e.printStackTrace();
 		}
 	}

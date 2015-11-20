@@ -65,7 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         if(db.data.size() < 1) return;
 
         ArrayList<String> contact = db.data.get(position);
-        ranking.setText(position);
+        ranking.setText(String.valueOf(position+1));
         if(Integer.parseInt(contact.get(1)) == 0){
             name.setText("-----");
             score.setText("--");

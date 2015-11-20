@@ -23,7 +23,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
 
     public static int WIDTH = 0;
     public static int HEIGHT = 0;
-    //Collision buffer to elemenate false detection.
+    //Collision buffer to eliminate false detection.
     public static int collisionBuffer = 10;
 
     private SensorManager sensorManager;
@@ -53,13 +53,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
      */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        WIDTH = getWidth();
-        HEIGHT = getHeight();
-        System.out.println("surfaceCreated called View Width = " + WIDTH + "    View Height = " + HEIGHT);
-        //Initialize the Sensor
-        //Initiate all game objects
-        paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/5, getWidth()/6, getWidth()/18);
-        ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,getWidth()/24);
+
+        resetGame(); //Initalize new game variables
+
         thread = new TimerThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
@@ -126,12 +122,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
      */
     public void update() {
         if(gameStarted){
+            if(!ball.isInPlay()){
+                resetGame(); //Ball is out of bounds.. reset game
+                return;
+            }
             //Paddle vs Ball collision detection
             if (Rect.intersects(ball.getRectangle(), paddle.getRectangle())) {
+
                 System.out.println("Ball Top : " + ball.getRectangle().top + "-Ball Bottom : " + ball.getRectangle().bottom
                         + "-Ball Left : " + ball.getRectangle().left + "-Ball Right : " + ball.getRectangle().right);
                 System.out.println("Paddle Top : " + paddle.getRectangle().top + "-Paddle Bottom : " + paddle.getRectangle().bottom
                         + "-Paddle Left : " + paddle.getRectangle().left + "-Paddle Right : " + paddle.getRectangle().right);
+
                 if (ball.getRectangle().bottom > paddle.getRectangle().top
                         && ball.getRectangle().bottom < paddle.getRectangle().top + collisionBuffer
                         && ( ball.getRectangle().left + collisionBuffer < paddle.getRectangle().right
@@ -170,6 +172,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         }
     }
 
+    //Reset all game variables
+    public void resetGame(){
+        gameStarted = false;
+        WIDTH = getWidth();
+        HEIGHT = getHeight();
+        System.out.println("surfaceCreated called View Width = " + WIDTH + "    View Height = " + HEIGHT);
+        //Initiate all game objects
+        paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/6, getWidth()/6, getWidth()/18);
+        ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,getWidth()/24);
+    }
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -181,9 +194,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
     }
 
     public void updateRotationSensor(float xRotation) {
+        //Update ball's x axis acceleration based on how much device tilted along the x axis
         if(gameStarted){
             ball.setDx(ball.getDx() + -(int)xRotation);
-            System.out.println("X = " + (int)xRotation);
         }
 
     }

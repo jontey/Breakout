@@ -13,18 +13,23 @@ import com.jonathantey.breakout.GamePanel;
 public class Ball extends GameObject{
 
     private Paint paint;
+    private boolean inPlay;
 
     private int r;
 
     private int maxSpeed;
 
     public Ball(int x, int y, int r){
+        inPlay = true;
         this.x = x;
         this.y = y;
         this.r = r;
     }
 
     public void update(){
+        if(!inPlay){
+            return;
+        }
         if( x > GamePanel.WIDTH - this.r || x < r){
 
             if(x > GamePanel.WIDTH - this.r){
@@ -37,16 +42,16 @@ public class Ball extends GameObject{
 
             dx = -dx;
         }
-        if(y > GamePanel.HEIGHT - 2 * this.r|| y < this.r){
-
+        if(y > GamePanel.HEIGHT - 2 * this.r){ //Reached bottom of screen
             if(y > GamePanel.HEIGHT - 2 * this.r){
                 y = GamePanel.HEIGHT - 2 * this.r;
             }
-
+            //Ball is out of bounds
+            inPlay = false;
+        } else if (y < this.r){
             if(y < this.r){
                 y = this.r;
             }
-
             dy = -dy;
         }
 
@@ -95,6 +100,10 @@ public class Ball extends GameObject{
     public void setVector(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
+    }
+
+    public boolean isInPlay(){
+        return inPlay;
     }
 
     @Override

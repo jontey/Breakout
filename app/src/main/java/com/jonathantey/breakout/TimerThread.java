@@ -15,7 +15,7 @@ public class TimerThread extends Thread implements Serializable{
 
 
     private final String LOG_TAG = TimerThread.class.getSimpleName();
-    private static final int FPS = 25;
+    protected static final int FPS = 25;
     private SurfaceHolder surfaceHolder;
     private GamePanel gamePanel;
     private boolean running;

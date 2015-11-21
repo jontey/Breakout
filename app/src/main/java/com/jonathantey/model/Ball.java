@@ -8,15 +8,16 @@ import android.graphics.Rect;
 import com.jonathantey.breakout.GamePanel;
 
 /**
- * Created by Lucas on 2015/11/17.
+ * Created by Fan Lu on 2015/11/17.
  */
 public class Ball extends GameObject{
 
     private Paint paint;
     private boolean inPlay;
 
-
     private int r;
+
+    private int maxSpeed;
 
     public Ball(int x, int y, int r){
         inPlay = true;
@@ -53,6 +54,14 @@ public class Ball extends GameObject{
             }
             dy = -dy;
         }
+
+        if(dx > maxSpeed){
+            dx = maxSpeed;
+        }
+
+        if(dx < -maxSpeed){
+            dx = -maxSpeed;
+        }
         this.x += this.dx;
         this.y += this.dy;
     }
@@ -77,6 +86,15 @@ public class Ball extends GameObject{
 
     public void setR(int r) {
         this.r = r;
+    }
+
+
+    public int getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(int maxSpeed) {
+        this.maxSpeed = maxSpeed;
     }
 
     public void setVector(int dx, int dy) {

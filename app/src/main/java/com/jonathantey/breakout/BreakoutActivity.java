@@ -13,6 +13,7 @@ public class BreakoutActivity extends AppCompatActivity {
 
     private database db;
     private GamePanel gamePanel = null;
+    private RotationSensor rotationSensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class BreakoutActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        rotationSensor = new RotationSensor(this);
         db = new database(getBaseContext(), "leaderboard.txt");
     }
 
@@ -90,6 +92,7 @@ public class BreakoutActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        rotationSensor.unregisterListener();
         System.out.println("onPause called");
     }
 
@@ -102,6 +105,7 @@ public class BreakoutActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        rotationSensor.registerListener();
         System.out.println("onResume called");
     }
 
@@ -115,5 +119,9 @@ public class BreakoutActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         System.out.println("onRestart called");
+    }
+
+    public void updateRotationSensor(float xRotation) {
+        gamePanel.updateRotationSensor(xRotation);
     }
 }

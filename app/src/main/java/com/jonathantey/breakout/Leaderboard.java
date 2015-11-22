@@ -17,6 +17,7 @@ public class Leaderboard extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private database db;
+    private boolean menu_save;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class Leaderboard extends AppCompatActivity {
         getSupportActionBar().setTitle("Leaderboard");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        menu_save = false;
     }
 
 
@@ -37,6 +39,7 @@ public class Leaderboard extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_leaderboard, menu);
+        menu.findItem(R.id.edit_save).setVisible(menu_save);
         return true;
     }
 
@@ -52,11 +55,26 @@ public class Leaderboard extends AppCompatActivity {
             db.reset();
             mAdapter.notifyDataSetChanged();
         }
+        if(id == android.R.id.home){
+            db.sortData(1, true);
+            db.trim(10);
+            db.saveDatabase();
+            this.finish();
+        }
         if(id == R.id.action_newgame){
             db.sortData(1, true);
             db.trim(10);
             db.saveDatabase();
             this.finish();
+        }
+        if(id == R.id.edit_save){
+            db.sortData(1, true);
+            db.trim(10);
+            db.saveDatabase();
+            getIntent().removeExtra("score");
+            getIntent().putExtra("score", -1);
+            menu_save = false;
+            recreate();
         }
 
         return super.onOptionsItemSelected(item);
@@ -81,16 +99,17 @@ public class Leaderboard extends AppCompatActivity {
                     edit_index = i;
                 }
             }
-        } else {
-            score = 999999999;
+
+            ArrayList<String> current_score = new ArrayList<String>(2);
+            current_score.add(0, "You");
+            current_score.add(1, String.valueOf(score));
+            db.add(current_score);
+            db.sortData(1, true);
         }
 
-        ArrayList<String> current_score = new ArrayList<String>(2);
-        current_score.add(0, "You");
-        current_score.add(1, String.valueOf(score));
-        db.add(current_score);
-        db.sortData(1, true);
-        if(edit_index < 10){
+        if(edit_index < 10 && edit_index > -1){
+            menu_save = true;
+            invalidateOptionsMenu();
             db.trim(10);
         }
 

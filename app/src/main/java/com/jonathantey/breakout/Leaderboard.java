@@ -52,6 +52,12 @@ public class Leaderboard extends AppCompatActivity {
             db.reset();
             mAdapter.notifyDataSetChanged();
         }
+        if(id == R.id.action_newgame){
+            db.sortData(1, true);
+            db.trim(10);
+            db.saveDatabase();
+            this.finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }

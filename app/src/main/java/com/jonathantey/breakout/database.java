@@ -25,7 +25,7 @@ public class database {
         for(int i=0; i<10; i++){
             ArrayList<String> db_line = new ArrayList<String>(2);
             db_line.add(0, "");
-            db_line.add(1, "0");
+            db_line.add(1, "999999999");
             data.add(db_line);
         }
 		readDatabase();
@@ -136,4 +136,15 @@ public class database {
         saveDatabase();
         return r;
     }
+
+	public void reset(){
+		data = new ArrayList<ArrayList<String>>(10);
+		for(int i=0; i<10; i++){
+			ArrayList<String> db_line = new ArrayList<String>(2);
+			db_line.add(0, "");
+			db_line.add(1, "999999999");
+			data.add(db_line);
+		}
+		saveDatabase();
+	}
 }

@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 public class BreakoutActivity extends AppCompatActivity {
 
@@ -37,9 +39,71 @@ public class BreakoutActivity extends AppCompatActivity {
         System.out.println("onCreate called");
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_games_white_24dp);
 
         rotationSensor = new RotationSensor(this);
         db = new database(getBaseContext(), "leaderboard.txt");
+
+        //Speed slider
+        SeekBar speed_control = (SeekBar) findViewById(R.id.speed_control);
+        speed_control.setProgress(20);
+        speed_control.incrementProgressBy(10);
+        speed_control.setMax(70);
+
+        final TextView speed_display = (TextView) findViewById(R.id.speed);
+
+        speed_control.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progress = progress / 10;
+                switch(progress){
+                    case 0:
+                        speed_display.setText(String.valueOf("0.25x"));
+                        gamePanel.setBallSpeed(0.25);
+                        break;
+                    case 1:
+                        speed_display.setText(String.valueOf("0.5x"));
+                        gamePanel.setBallSpeed(0.5);
+                        break;
+                    case 2:
+                        speed_display.setText(String.valueOf("1.0x"));
+                        gamePanel.setBallSpeed(1);
+                        break;
+                    case 3:
+                        speed_display.setText(String.valueOf("2.0x"));
+                        gamePanel.setBallSpeed(2);
+                        break;
+                    case 4:
+                        speed_display.setText(String.valueOf("3.0x"));
+                        gamePanel.setBallSpeed(3);
+                        break;
+                    case 5:
+                    case 6:
+                        speed_display.setText(String.valueOf("4.0x"));
+                        gamePanel.setBallSpeed(4);
+                        break;
+                    case 7:
+                        speed_display.setText(String.valueOf("5.0x"));
+                        gamePanel.setBallSpeed(5);
+                        break;
+                    default:
+                        speed_display.setText(String.valueOf("1.0x"));
+                        gamePanel.setBallSpeed(1);
+                        break;
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @Override

@@ -98,6 +98,21 @@ public class Ball extends GameObject{
         this.maxSpeed = maxSpeed;
     }
 
+    //Update the ball with the new speed
+    public void setSpeed(int speed){
+        setMaxSpeed(speed);
+        if(dx < 0){
+            dx = -speed;
+        } else {
+            dx = speed;
+        }
+        if(dy < 0){
+            dy = -speed;
+        } else {
+            dy = speed;
+        }
+    }
+
     public void setVector(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;

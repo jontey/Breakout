@@ -1,3 +1,7 @@
+/**
+ * Created by Fan Lu on 2015/11/17.
+ * This class models the Ball object
+ */
 package com.jonathantey.model;
 
 import android.graphics.Canvas;
@@ -7,9 +11,6 @@ import android.graphics.Rect;
 
 import com.jonathantey.breakout.GamePanel;
 
-/**
- * Created by Fan Lu on 2015/11/17.
- */
 public class Ball extends GameObject{
 
     private Paint paint;

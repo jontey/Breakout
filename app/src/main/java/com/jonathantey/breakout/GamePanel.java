@@ -7,24 +7,28 @@ package com.jonathantey.breakout;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.hardware.SensorManager;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.jonathantey.model.Ball;
+import com.jonathantey.model.Brick;
 import com.jonathantey.model.Paddle;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Serializable{
 
     public static int WIDTH = 0;
     public static int HEIGHT = 0;
-    //Collision buffer to eliminate false detection.
-    public static int collisionBuffer = 10;
 
     private SensorManager sensorManager;
     private TimerThread thread;
@@ -32,6 +36,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
     private Paddle paddle;
     private Ball ball;
     private int ballSpeed = 10;
+
+    private ArrayList<ArrayList<Brick>> bricks;
+    private Random random = new Random();
 
     /**
      * Implemented by Fan Lu
@@ -134,17 +141,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
                 System.out.println("Paddle Top : " + paddle.getRectangle().top + "-Paddle Bottom : " + paddle.getRectangle().bottom
                         + "-Paddle Left : " + paddle.getRectangle().left + "-Paddle Right : " + paddle.getRectangle().right);
 
-                if (ball.getRectangle().bottom > paddle.getRectangle().top
-                        && ball.getRectangle().bottom < paddle.getRectangle().top + collisionBuffer
-                        && ( ball.getRectangle().left + collisionBuffer < paddle.getRectangle().right
-                        && ball.getRectangle().right > paddle.getRectangle().left + collisionBuffer)) {
+                if (CollisionDetectionHelper.topCollision(ball, paddle)) {
                     //Top collision detecion
                     ball.setY(paddle.getRectangle().top - ball.getR());
                     ball.setDy(-ball.getDy());
 
-                    System.out.println("Top Collision Occured");
-                }else if(ball.getRectangle().bottom >= paddle.getRectangle().top
-                        && ball.getRectangle().top < paddle.getRectangle().top + collisionBuffer ){
+                    System.out.println("Paddle Top Collision Occured");
+                }else if(CollisionDetectionHelper.bottomCollision(ball, paddle)){
+                    ball.setY(paddle.getRectangle().top - ball.getR());
+                    ball.setDy(-ball.getDy());
+
+                    System.out.println("Paddle Bottom Collision Occured");
+                }else if(CollisionDetectionHelper.sideCollision(ball, paddle)){
                     //Side collision detection
                     if(ball.getRectangle().centerX() < paddle.getRectangle().centerX()){
                         ball.setX(paddle.getX() - ball.getR());
@@ -154,18 +162,50 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
 
                     ball.setDx(-ball.getDx());
                     ball.setDy(-ball.getDy());
-
-                    System.out.println("Side Collision Occured");
+                    System.out.println("Paddle Side Collision Occured");
                 }else{
                     //Other collision detection
                     ball.setDx(-ball.getDx());
-
-                    System.out.println("Other Collision Occured");
+                    System.out.println("Paddle Other Collision Occured");
                 }
             }
 
             //Brick vs Ball collision detection
+            for(int levelIdx = 0; levelIdx < bricks.size(); levelIdx++){
+                for(int rowIdx = 0; rowIdx < bricks.get(levelIdx).size(); rowIdx++){
+                    if(Rect.intersects(ball.getRectangle(), bricks.get(levelIdx).get(rowIdx).getRectangle())){
+                        if(CollisionDetectionHelper.bottomCollision(ball, bricks.get(levelIdx).get(rowIdx))){
+                            ball.setDy(-ball.getDy());
+                            bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
 
+                            System.out.println("Brick Bottom Collision Occured");
+                        }else if(CollisionDetectionHelper.topCollision(ball, bricks.get(levelIdx).get(rowIdx))){
+                            ball.setDy(-ball.getDy());
+                            bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
+
+                            System.out.println("Brick Top Collision Occured");
+                        }else if(CollisionDetectionHelper.sideCollision(ball, bricks.get(levelIdx).get(rowIdx))){
+                            ball.setDx(-ball.getDx());
+                            ball.setDy(-ball.getDy());
+                            bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
+
+                            System.out.println("Brick Side Collision Occured");
+                        }else{
+                            ball.setDx(-ball.getDx());
+                            bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
+
+                            System.out.println("Brick Other Collision Occured");
+                        }
+                    }
+
+                    if(bricks.get(levelIdx).get(rowIdx).getHardness() == 0){
+                        bricks.get(levelIdx).remove(rowIdx);
+                    }
+                }
+                if(bricks.get(levelIdx).size() == 0){
+                    bricks.remove(levelIdx);
+                }
+            }
 
 
             ball.update();
@@ -177,10 +217,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         gameStarted = false;
         WIDTH = getWidth();
         HEIGHT = getHeight();
-        System.out.println("surfaceCreated called View Width = " + WIDTH + "    View Height = " + HEIGHT);
+        System.out.println("Game Reset called View Width = " + WIDTH + "    View Height = " + HEIGHT);
         //Initiate all game objects
         paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/6, getWidth()/6, getWidth()/18);
         ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,getWidth()/24);
+        bricks = new ArrayList<ArrayList<Brick>>();
+        for(int levelIdx = 0; levelIdx < 3; levelIdx++){
+            ArrayList<Brick> level = new ArrayList<Brick>();
+            bricks.add(level);
+            for(int rowIdx = 0; rowIdx < 9 - levelIdx; rowIdx++){
+                level.add(new Brick(rowIdx * WIDTH / (9 - levelIdx), 0 + levelIdx * HEIGHT / 12, WIDTH / (9 - levelIdx) - 4, HEIGHT / 12 - 4, random.nextInt(5) + 1));
+            }
+        }
+
+
     }
 
     @Override
@@ -188,8 +238,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         super.draw(canvas);
         //Draw all the elements.
         if(canvas != null){
+            canvas.drawColor(Color.LTGRAY);
             paddle.draw(canvas);
             ball.draw(canvas);
+            for(ArrayList<Brick> brickLevels: bricks){
+                for(Brick brick: brickLevels){
+                    brick.draw(canvas);
+                }
+            }
         }
     }
 

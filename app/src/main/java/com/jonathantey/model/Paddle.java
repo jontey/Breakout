@@ -1,12 +1,13 @@
+/**
+ * Created by Fan Lu on 2015/11/17.
+ * This class models the Paddle object
+ */
 package com.jonathantey.model;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-/**
- * Created by Lucas on 2015/11/17.
- */
 public class Paddle extends GameObject{
 
     private Paint paint;

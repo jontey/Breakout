@@ -3,9 +3,12 @@ package com.jonathantey.breakout;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -61,19 +64,51 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         TextView ranking = (TextView) holder.myView.findViewById(R.id.text_ranking);
         TextView name = (TextView) holder.myView.findViewById(R.id.text_name);
         TextView score = (TextView) holder.myView.findViewById(R.id.text_score);
+        final EditText edit_name = (EditText) holder.myView.findViewById(R.id.edit_name);
+
+        if(edit_index >= 0 && position == edit_index){
+            name.setVisibility(View.INVISIBLE);
+            edit_name.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    ArrayList<String> db_line = db.data.get(edit_index);
+                    db_line.set(0, s.toString());
+                    db.saveDatabase();
+                }
+            });
+        } else {
+            //Hide if score not on leaderboard
+            edit_name.setVisibility(View.INVISIBLE);
+        }
 
         if(db.data.size() < 1) return;
 
         ArrayList<String> contact = db.data.get(position);
-        ranking.setText(String.valueOf(position+1));
-        if(Integer.parseInt(contact.get(1)) == 0){
-            name.setText("-----");
-            score.setText("--");
-        } else {
+
+        if(position < 10) {
+            ranking.setText(String.valueOf(position + 1));
+            if (Integer.parseInt(contact.get(1)) == 999999999) {
+                name.setText("________");
+                score.setText("___");
+            } else {
+                name.setText(contact.get(0));
+                score.setText(contact.get(1));
+            }
+        } else { //If current score is not on leaderboard
+            ranking.setText("");
             name.setText(contact.get(0));
             score.setText(contact.get(1));
         }
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)

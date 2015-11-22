@@ -6,6 +6,7 @@
 package com.jonathantey.breakout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.hardware.SensorManager;
@@ -31,7 +32,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
     private boolean gameStarted;
     private Paddle paddle;
     private Ball ball;
+    private final double BASE_SPEED = 10;
     private int ballSpeed = 10;
+
+    //Game score
+    private long time_start;
+    private long time_end;
 
     /**
      * Implemented by Fan Lu
@@ -99,6 +105,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
             //When user first touch the screen, if the game has not start yet, start the game.
             if(!gameStarted){
                 gameStarted = true;
+                time_start = System.currentTimeMillis();
+                time_end = 0;
                 ball.setVector(ballSpeed, -ballSpeed);
                 ball.setMaxSpeed(ballSpeed);
                 paddle.update((int) event.getX() - paddle.getWidth() / 2);
@@ -172,6 +180,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         }
     }
 
+    //Call only if game is won
+    public void wonGame() {
+        time_end = System.currentTimeMillis();
+        //Calculate time
+        long time_elapsed = time_start - time_end;
+        int score = (int) (time_elapsed/1000); //Get score in # of seconds passed
+        Intent intent = new Intent(findViewById(R.id.toolbar).getContext(), Leaderboard.class);
+        intent.putExtra("score", score);
+        findViewById(R.id.toolbar).getContext().startActivity(intent);
+
+        resetGame();
+    }
+
     //Reset all game variables
     public void resetGame(){
         gameStarted = false;
@@ -181,6 +202,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         //Initiate all game objects
         paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/6, getWidth()/6, getWidth()/18);
         ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,getWidth()/24);
+
+        //Reset time variables
+        time_end = 0;
+        time_start = 0;
     }
 
     @Override
@@ -196,8 +221,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
     public void updateRotationSensor(float xRotation) {
         //Update ball's x axis acceleration based on how much device tilted along the x axis
         if(gameStarted){
-            ball.setDx(ball.getDx() + -(int)xRotation);
+            ball.setDx(ball.getDx() + -(int) xRotation);
         }
 
+    }
+
+    public void setBallSpeed(double multiplier){
+        ballSpeed = (int) Math.round(BASE_SPEED * multiplier);
+        ball.setSpeed(ballSpeed);
     }
 }

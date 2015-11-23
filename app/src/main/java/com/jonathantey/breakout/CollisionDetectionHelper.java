@@ -10,12 +10,12 @@ import com.jonathantey.model.GameObject;
 public class CollisionDetectionHelper {
 
     //Collision buffer to eliminate false detection.
-    private static int collisionBuffer = 50;
+    private static int collisionBuffer = GamePanel.BALL_RADIUS;
 
     public static boolean topCollision(Ball ball, GameObject gameObject){
         if(ball.getRectangle().bottom > gameObject.getRectangle().top
                 && ball.getRectangle().bottom < gameObject.getRectangle().top + collisionBuffer
-                && (ball.getRectangle().right - collisionBuffer > gameObject.getRectangle().left
+                && (ball.getRectangle().right - collisionBuffer >= gameObject.getRectangle().left
                 && ball.getRectangle().left + collisionBuffer < gameObject.getRectangle().right)){
             return true;
         }else{

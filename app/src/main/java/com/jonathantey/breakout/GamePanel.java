@@ -9,19 +9,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.hardware.SensorManager;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.jonathantey.model.Ball;
 import com.jonathantey.model.Brick;
 import com.jonathantey.model.Paddle;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,6 +31,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
 
     public static int WIDTH = 0;
     public static int HEIGHT = 0;
+    public static int BALL_RADIUS = 0;
 
     private SensorManager sensorManager;
     private TimerThread thread;
@@ -66,6 +68,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
      */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+
+        WIDTH = getWidth();
+        HEIGHT = getHeight();
+        BALL_RADIUS = this.WIDTH / 24;
+        System.out.println("Game surfaceCreated called View Width = " + WIDTH + "    View Height = " + HEIGHT);
 
         resetGame(); //Initalize new game variables
 
@@ -180,7 +187,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
 
             //Brick vs Ball collision detection
             for(int levelIdx = 0; levelIdx < bricks.size(); levelIdx++){
+
                 for(int rowIdx = 0; rowIdx < bricks.get(levelIdx).size(); rowIdx++){
+
                     if(Rect.intersects(ball.getRectangle(), bricks.get(levelIdx).get(rowIdx).getRectangle())){
                         if(CollisionDetectionHelper.bottomCollision(ball, bricks.get(levelIdx).get(rowIdx))){
                             ball.setDy(-ball.getDy());
@@ -194,7 +203,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
                             System.out.println("Brick Top Collision Occured");
                         }else if(CollisionDetectionHelper.sideCollision(ball, bricks.get(levelIdx).get(rowIdx))){
                             ball.setDx(-ball.getDx());
-                            ball.setDy(-ball.getDy());
                             bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
 
                             System.out.println("Brick Side Collision Occured");
@@ -210,9 +218,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
                         bricks.get(levelIdx).remove(rowIdx);
                     }
                 }
+
                 if(bricks.get(levelIdx).size() == 0){
                     bricks.remove(levelIdx);
                 }
+
             }
 
 
@@ -236,24 +246,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
     //Reset all game variables
     public void resetGame(){
         gameStarted = false;
-        WIDTH = getWidth();
-        HEIGHT = getHeight();
-        System.out.println("Game Reset called View Width = " + WIDTH + "    View Height = " + HEIGHT);
+
         //Initiate all game objects
         paddle = new Paddle(getWidth()/2 - getWidth()/12, HEIGHT - getHeight()/6, getWidth()/6, getWidth()/18);
-        ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,getWidth()/24);
+        ball = new Ball(getWidth()/2, paddle.getY() - getWidth()/24 ,BALL_RADIUS);
         bricks = new ArrayList<ArrayList<Brick>>();
         for(int levelIdx = 0; levelIdx < 3; levelIdx++){
             ArrayList<Brick> level = new ArrayList<Brick>();
             bricks.add(level);
             for(int rowIdx = 0; rowIdx < 9 - levelIdx; rowIdx++){
-                level.add(new Brick(rowIdx * WIDTH / (9 - levelIdx), 0 + levelIdx * HEIGHT / 12, WIDTH / (9 - levelIdx) - 4, HEIGHT / 12 - 4, random.nextInt(5) + 1));
+                level.add(new Brick(rowIdx * WIDTH / (9 - levelIdx), 0 + levelIdx * HEIGHT / 12,
+                        WIDTH / (9 - levelIdx) - 4, HEIGHT / 12 - 4, random.nextInt(5) + 1));
             }
         }
 
         //Reset time variables
         time_end = 0;
-        time_start = 0;
+        time_start = System.currentTimeMillis();
     }
 
     @Override
@@ -269,6 +278,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
                     brick.draw(canvas);
                 }
             }
+
+            //Update the time elapsed
+            drawScore(canvas);
+
+
+
+        }
+    }
+
+    private void drawScore(Canvas canvas) {
+        if(gameStarted){
+            long time_elapsed = System.currentTimeMillis() - time_start;
+            Paint paint2 = new Paint();
+            paint2.setColor(Color.BLACK);
+            paint2.setTextSize(30);
+            paint2.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+            SimpleDateFormat sdf = new SimpleDateFormat("mm : ss");
+            canvas.drawText("Time Elapsed = " + time_elapsed / (60 * 1000) + " : " + (time_elapsed / 1000) % 60 + "." + (time_elapsed / 100) % 10, 50, HEIGHT - 100, paint2);
         }
     }
 

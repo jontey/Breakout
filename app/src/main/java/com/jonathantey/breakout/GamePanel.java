@@ -145,6 +145,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
     public void update() {
         if(gameStarted){
             if(!ball.isInPlay()){
+                if(ball.isGame_won()){
+                    wonGame();
+                }
                 resetGame(); //Ball is out of bounds.. reset game
                 return;
             }
@@ -234,13 +237,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
     public void wonGame() {
         time_end = System.currentTimeMillis();
         //Calculate time
-        long time_elapsed = time_start - time_end;
+        long time_elapsed = time_end - time_start;
         int score = (int) (time_elapsed/1000); //Get score in # of seconds passed
-        Intent intent = new Intent(findViewById(R.id.toolbar).getContext(), Leaderboard.class);
+        Intent intent = new Intent(getContext(), Leaderboard.class);
         intent.putExtra("score", score);
-        findViewById(R.id.toolbar).getContext().startActivity(intent);
-
-        resetGame();
+        getContext().startActivity(intent);
     }
 
     //Reset all game variables

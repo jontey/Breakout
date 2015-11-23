@@ -1,6 +1,7 @@
 package com.jonathantey.breakout;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -106,6 +107,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             }
         } else { //If current score is not on leaderboard
             ranking.setText("");
+            name.setTypeface(null, Typeface.BOLD);
+            score.setTypeface(null, Typeface.BOLD);
             name.setText(contact.get(0));
             score.setText(contact.get(1));
         }

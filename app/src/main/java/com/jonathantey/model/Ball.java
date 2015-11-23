@@ -15,6 +15,7 @@ public class Ball extends GameObject{
 
     private Paint paint;
     private boolean inPlay;
+    private boolean game_won;
 
     private int r;
 
@@ -22,6 +23,7 @@ public class Ball extends GameObject{
 
     public Ball(int x, int y, int r){
         inPlay = true;
+        game_won = false;
         this.x = x;
         this.y = y;
         this.r = r;
@@ -49,11 +51,13 @@ public class Ball extends GameObject{
             }
             //Ball is out of bounds
             inPlay = false;
-        } else if (y < this.r){
+        } else if (y < this.r){ //Reached top of screen
             if(y < this.r){
                 y = this.r;
             }
             dy = -dy;
+            inPlay = false;
+            game_won = true;
         }
 
         if(dx > maxSpeed){
@@ -122,6 +126,9 @@ public class Ball extends GameObject{
         return inPlay;
     }
 
+    public boolean isGame_won(){
+        return game_won;
+    }
     @Override
     public Rect getRectangle() {
         return new Rect(x - r, y - r, x + r, y + r);

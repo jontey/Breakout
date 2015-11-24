@@ -255,9 +255,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         for(int levelIdx = 0; levelIdx < 3; levelIdx++){
             ArrayList<Brick> level = new ArrayList<Brick>();
             bricks.add(level);
+            int previousHardness = 0;
+            int currentHardness = 0;
             for(int rowIdx = 0; rowIdx < 9 - levelIdx; rowIdx++){
+                currentHardness = (random.nextInt(5) + 1);
+                while(previousHardness == currentHardness){
+                    currentHardness = (random.nextInt(5) + 1);
+                }
+                previousHardness = currentHardness;
                 level.add(new Brick(rowIdx * WIDTH / (9 - levelIdx), 0 + levelIdx * HEIGHT / 12,
-                        WIDTH / (9 - levelIdx) - 4, HEIGHT / 12 - 4, random.nextInt(5) + 1));
+                        WIDTH / (9 - levelIdx) - 4, HEIGHT / 12 - 4, currentHardness));
             }
         }
 

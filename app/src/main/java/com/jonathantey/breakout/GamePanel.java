@@ -148,7 +148,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
                 if(ball.isGame_won()){
                     wonGame();
                 }
-                resetGame(); //Ball is out of bounds.. reset game
+                //resetGame(); //Ball is out of bounds.. reset game
                 return;
             }
             //Paddle vs Ball collision detection
@@ -303,7 +303,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
             paint2.setTextSize(30);
             paint2.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
             SimpleDateFormat sdf = new SimpleDateFormat("mm : ss");
-            canvas.drawText("Time Elapsed = " + time_elapsed / (60 * 1000) + " : " + (time_elapsed / 1000) % 60 + "." + (time_elapsed / 100) % 10, 50, HEIGHT - 100, paint2);
+            canvas.drawText("Time Elapsed = " + time_elapsed / (60 * 1000) + " : " + (time_elapsed / 1000) % 60 + "." + (time_elapsed / 100) % 10, 50, HEIGHT - 200, paint2);
         }
     }
 

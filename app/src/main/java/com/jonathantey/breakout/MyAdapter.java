@@ -21,6 +21,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private database db;
     private int edit_index;
 
+    // Implemented by Jonathan Tey
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -33,16 +34,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
+    // Implemented by Jonathan Tey
     // Provide a suitable constructor (depends on the kind of dataset)
     public MyAdapter(database database) {
         db = database;
     }
 
+    // Implemented by Jonathan Tey
     public MyAdapter(database database, int idx) {
         edit_index = idx;
         db = database;
     }
 
+    // Implemented by Jonathan Tey
     // Create new views (invoked by the layout manager)
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -56,6 +60,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return vh;
     }
 
+    // Implemented by Jonathan Tey
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -114,6 +119,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
+    // Implemented by Jonathan Tey
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {

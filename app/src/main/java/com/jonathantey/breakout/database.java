@@ -16,8 +16,9 @@ public class database {
     private Context context;
 	private String db_name;
 	private File db_file;
-	
-	
+
+
+	// Implemented by Jonathan Tey
 	public database(Context v, String file_name){
 		db_name = file_name; //Save file name
         context = v;
@@ -30,7 +31,8 @@ public class database {
         }
 		readDatabase();
 	}
-	
+
+	// Implemented by Jonathan Tey
 	/****************
 	* Database Format
 	* ---------------
@@ -64,7 +66,8 @@ public class database {
 			e.printStackTrace();
 		}
 	}
-	
+
+	// Implemented by Jonathan Tey
 	public void saveDatabase(){
 		try {
             FileOutputStream outputWriter = context.openFileOutput(db_name, Context.MODE_PRIVATE);
@@ -82,7 +85,8 @@ public class database {
 			e.printStackTrace();
 		}
 	}
-	
+
+	// Implemented by Jonathan Tey
 	public void sortData(int index, boolean asc){
 		final int i = index;
         final boolean a = asc;
@@ -97,7 +101,8 @@ public class database {
 			}
 		});
 	}
-	
+
+	// Implemented by Jonathan Tey
 	public ArrayList<Integer> findData(int index, String s){
 		ArrayList<Integer> temp_list = new ArrayList<Integer>();
 		for(int i=0; i<data.size(); i++){
@@ -108,6 +113,7 @@ public class database {
 		return temp_list;
 	}
 
+	// Implemented by Jonathan Tey
     /**
      * Custom method to add score and keep 10 best scores
      */
@@ -117,26 +123,32 @@ public class database {
         trim(10); //Keep first 10 scores. Delete the rest
     }
 
+	// Implemented by Jonathan Tey
     public void edit(ArrayList<String> input, int index){
         data.set(index, input);
     }
 
+	// Implemented by Jonathan Tey
     public void add(ArrayList<String> input){
         data.add(input);
     }
 
+	// Implemented by Jonathan Tey
     public void trim(int maxSize){
         while(data.size() > maxSize){
             data.remove(data.size()-1);
         }
     }
 
+	// Implemented by Jonathan Tey
     public ArrayList<String> delete(int index){
         ArrayList<String> r = data.remove(index);
         saveDatabase();
         return r;
     }
 
+	// Implemented by Jonathan Tey
+	// Reset the leaderboard
 	public void reset(){
 		data = new ArrayList<ArrayList<String>>(10);
 		for(int i=0; i<10; i++){

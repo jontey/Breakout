@@ -17,6 +17,12 @@ public class BreakoutActivity extends AppCompatActivity {
     private GamePanel gamePanel = null;
     private RotationSensor rotationSensor;
 
+    // Implemented by Jonathan Tey
+    // When app is launched
+    // - Set fullscreen mode
+    // - Set initial game conditions
+    // - Initialize game controls and suitable listeners
+    // - Wait for user to start game
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +112,7 @@ public class BreakoutActivity extends AppCompatActivity {
         });
     }
 
+    // Implemented by Jonathan Tey
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -113,6 +120,7 @@ public class BreakoutActivity extends AppCompatActivity {
         return true;
     }
 
+    // Implemented by Jonathan Tey
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

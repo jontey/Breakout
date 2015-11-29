@@ -19,6 +19,7 @@ public class Leaderboard extends AppCompatActivity {
     private database db;
     private boolean menu_save;
 
+    // Implemented by Jonathan Tey
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +34,8 @@ public class Leaderboard extends AppCompatActivity {
         menu_save = false;
     }
 
-
-
+    // Implemented by Jonathan Tey
+    // Inflate the menu bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -43,6 +44,8 @@ public class Leaderboard extends AppCompatActivity {
         return true;
     }
 
+    // Implemented by Jonathan Tey
+    //On menu item selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -80,6 +83,11 @@ public class Leaderboard extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Implemented by Jonathan Tey
+    // Onstart leaderboard activity
+    // Get the score from the last played game
+    // Check if score is in the top 10
+    // Display the leaderboard screen
     @Override
     protected void onStart() {
         super.onStart();
@@ -130,6 +138,8 @@ public class Leaderboard extends AppCompatActivity {
         this.findViewById(R.id.edit_name).setVisibility(View.INVISIBLE);
     }
 
+    // Implemented by Jonathan Tey
+    // Always save the database when possible
     @Override
     protected void onPause(){
         super.onPause();

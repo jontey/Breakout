@@ -114,7 +114,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             ranking.setText("");
             name.setTypeface(null, Typeface.BOLD);
             score.setTypeface(null, Typeface.BOLD);
-            name.setText(contact.get(0));
+            name.setText("You");
             score.setText(contact.get(1));
         }
     }

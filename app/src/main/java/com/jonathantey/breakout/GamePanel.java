@@ -236,6 +236,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
     //Call only if game is won
     public void wonGame() {
         time_end = System.currentTimeMillis();
+        gameStarted = false;
         //Calculate time
         long time_elapsed = time_end - time_start;
         int score = (int) (time_elapsed/1000); //Get score in # of seconds passed

@@ -109,7 +109,7 @@ public class Leaderboard extends AppCompatActivity {
             }
 
             ArrayList<String> current_score = new ArrayList<String>(2);
-            current_score.add(0, "You");
+            current_score.add(0, "");
             current_score.add(1, String.valueOf(score));
             db.add(current_score);
             db.sortData(1, true);

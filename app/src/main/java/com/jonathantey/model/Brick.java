@@ -1,5 +1,6 @@
 /**
  * Created by Fan lu on 2015/11/20.
+ * Contributor Jonathan Tey
  * This class models the brick object
  */
 package com.jonathantey.model;
@@ -12,6 +13,10 @@ public class Brick extends GameObject {
 
     private int hardness;
 
+    /**
+     * Implemented by Fan Lu
+     * Brick constructor
+     */
     public Brick (int x, int y, int width, int height, int hardness){
         this.x = x;
         this.y = y;
@@ -28,10 +33,10 @@ public class Brick extends GameObject {
         this.hardness = hardness;
     }
 
-    public void update(){
-
-    }
-
+    /**
+     * Implemented by Fan Lu
+     * Draw the brick based on its hardness
+     */
     public void draw(Canvas canvas){
         Paint paint1 = new Paint();
         paint1.setStyle(Paint.Style.FILL);

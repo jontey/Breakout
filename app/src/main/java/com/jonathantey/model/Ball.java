@@ -1,5 +1,6 @@
 /**
  * Created by Fan Lu on 2015/11/17.
+ * Contributor Jonathan Tey
  * This class models the Ball object
  */
 package com.jonathantey.model;
@@ -21,6 +22,10 @@ public class Ball extends GameObject{
 
     private int maxSpeed;
 
+    /**
+     * Implemented by Fan Lu
+     * Ball constructor
+     */
     public Ball(int x, int y, int r){
         inPlay = true;
         game_won = false;
@@ -29,6 +34,10 @@ public class Ball extends GameObject{
         this.r = r;
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Update the Ball parameter
+     */
     public void update(){
         if(!inPlay){
             return;
@@ -71,6 +80,10 @@ public class Ball extends GameObject{
         this.y += this.dy;
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Draw the Ball
+     */
     public void draw(Canvas canvas){
         try{
             if(paint != null){
@@ -102,7 +115,10 @@ public class Ball extends GameObject{
         this.maxSpeed = maxSpeed;
     }
 
-    //Update the ball with the new speed
+    /**
+     * Implemented by Fan Lu
+     * Update the ball with the new speed
+     */
     public void setSpeed(int speed){
         setMaxSpeed(speed);
         if(dx < 0){
@@ -117,6 +133,10 @@ public class Ball extends GameObject{
         }
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Ball constructor
+     */
     public void setVector(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;

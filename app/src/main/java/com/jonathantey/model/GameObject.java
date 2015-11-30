@@ -1,5 +1,6 @@
 /**
  * Created by Fan Lu on 2015/11/17.
+ * Contributor Jonathan Tey
  * This is the abstract class that all game object with extends from
  */
 package com.jonathantey.model;

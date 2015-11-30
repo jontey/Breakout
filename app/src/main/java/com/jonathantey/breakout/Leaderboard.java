@@ -1,3 +1,8 @@
+/**
+ * Created by Jonathan Tey on 2015/11/16.
+ * Contributor Fan Lu
+ * This is the main game panel that perform the top level game logic
+ */
 package com.jonathantey.breakout;
 
 import android.content.Intent;
@@ -9,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 
 import java.util.ArrayList;
 

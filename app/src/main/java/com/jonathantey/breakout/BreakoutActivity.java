@@ -1,3 +1,8 @@
+/**
+ * Created by Fan Lu on 2015/11/16.
+ * Contributor Jonathan Tey
+ * This is the main game panel that perform the top level game logic
+ */
 package com.jonathantey.breakout;
 
 import android.content.Intent;
@@ -7,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -45,15 +49,12 @@ public class BreakoutActivity extends AppCompatActivity {
 
         if (savedInstanceState != null){
             gamePanel = (GamePanel) savedInstanceState.getSerializable("GamePanel");
-            System.out.println("Get Saved Game Panel");
         }else{
             gamePanel = new GamePanel(this);
-            System.out.println("Create new Game Panel");
         }
 
         //gamePanel.setSystemUiVisibility( gamePanel.SYSTEM_UI_FLAG_HIDE_NAVIGATION );
         gameLayout.addView(gamePanel);
-        System.out.println("onCreate called");
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -159,56 +160,58 @@ public class BreakoutActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Implemented by Fan Lu
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        System.out.println("onRestoreInstanceState called");
     }
 
+    // Implemented by Fan Lu
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //outState.putSerializable("GamePanel", gamePanel);
-        System.out.println("protected onSaveInstanceState called");
     }
 
+    // Implemented by Fan Lu
     @Override
     protected void onPause() {
         super.onPause();
         rotationSensor.unregisterListener();
-        System.out.println("onPause called");
     }
 
+    // Implemented by Fan Lu
     @Override
     protected void onStop() {
         super.onStop();
-        System.out.println("onStop called");
     }
 
+    // Implemented by Fan Lu
     @Override
     protected void onResume() {
         super.onResume();
         rotationSensor.registerListener();
-        System.out.println("onResume called");
     }
 
+    // Implemented by Fan Lu
     @Override
     protected void onStart() {
         super.onStart();
-        System.out.println("onStart called");
     }
 
+    // Implemented by Fan Lu
     @Override
     protected void onRestart() {
         super.onRestart();
-        System.out.println("onRestart called");
     }
 
+    // Implemented by Fan Lu
     public void updateRotationSensor(float xRotation) {
         gamePanel.updateRotationSensor(xRotation);
     }
 
-    //Set immersive fullscreen app
+    // Implemented by Jonathan Tey
+    // Set immersive fullscreen app
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

@@ -1,5 +1,6 @@
 /**
  * Created by Fan Lu on 2015/11/16.
+ * Contributor Jonathan Tey
  * Set the timer for drawing the screen.
  */
 package com.jonathantey.breakout;
@@ -30,14 +31,20 @@ public class TimerThread extends Thread implements Serializable{
         this.running = running;
     }
 
-    //Initialize the SurfaceHolder and GamePanel when creating the Thread
+    /**
+     * Implemented by Fan Lu
+     * Initialize the SurfaceHolder and GamePanel when creating the Thread
+     */
     public TimerThread(SurfaceHolder surfaceHolder, GamePanel gamePanel){
         super();
         this.surfaceHolder = surfaceHolder;
         this.gamePanel = gamePanel;
     }
 
-    //Timer thread run method to update and draw the SurfaceView with 30 FPS rate
+    /**
+     * Implemented by Fan Lu
+     * Timer thread run method to update and draw the SurfaceView with 30 FPS rate
+     */
     public void run(){
         long startTime;
         long timeMillis;
@@ -87,5 +94,4 @@ public class TimerThread extends Thread implements Serializable{
             }
         }
     }
-
 }

@@ -1,8 +1,11 @@
+/**
+ * Created by Jonathan Tey on 2015/11/16.
+ * Contributor Fan Lu
+ * This is the main game panel that perform the top level game logic
+ */
 package com.jonathantey.breakout;
 
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;

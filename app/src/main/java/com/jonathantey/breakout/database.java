@@ -1,3 +1,8 @@
+/**
+ * Created by Jonathan Tey on 2015/11/16.
+ * Contributor Fan Lu
+ * This is the main game panel that perform the top level game logic
+ */
 package com.jonathantey.breakout;
 
 import android.content.Context;

@@ -1,5 +1,6 @@
 /**
  * Created by Fan Lu on 2015/11/18.
+ * Contributor Jonathan Tey
  * This is the RotationSensor that respond to Sensor event
  */
 
@@ -20,20 +21,36 @@ public class RotationSensor implements SensorEventListener{
     private long curTime;
     private long lastUpdateTime;
 
+    /**
+     * Implemented by Fan Lu
+     * RotationSensor constructor, set the breakout activity Context.
+     */
     public RotationSensor(Context context){
         breakoutActivity = (BreakoutActivity) context;
     }
 
+    /**
+     * Implemented by Fan Lu
+     * registerListener
+     */
     public void registerListener(){
         sensorManager = (SensorManager) breakoutActivity.getSystemService(Context.SENSOR_SERVICE);
         rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
+    /**
+     * Implemented by Fan Lu
+     * unregisterListener
+     */
     public void unregisterListener(){
         sensorManager.unregisterListener(this);
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Get the sensor value on SensorChanged event happened
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
 
@@ -50,6 +67,10 @@ public class RotationSensor implements SensorEventListener{
 
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Keep the interface override method complete
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 

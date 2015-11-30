@@ -1,5 +1,6 @@
 /**
  * Created by Fan Lu on 2015/11/16.
+ * Contributor Jonathan Tey
  * This is the main game panel that perform the top level game logic
  */
 
@@ -13,7 +14,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.hardware.SensorManager;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -72,7 +72,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         WIDTH = getWidth();
         HEIGHT = getHeight();
         BALL_RADIUS = this.WIDTH / 24;
-        System.out.println("Game surfaceCreated called View Width = " + WIDTH + "    View Height = " + HEIGHT);
 
         resetGame(); //Initalize new game variables
 
@@ -81,9 +80,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         thread.start();
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Exist only for the SurfaceHolder.Callback completion
+     */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        System.out.println("surfaceChanged called");
     }
 
     /**
@@ -92,7 +94,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
      */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        System.out.println("surfaceDestroyed called");
         boolean retry = true;
         gameStarted = false;
         int counter = 0;
@@ -154,22 +155,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
             //Paddle vs Ball collision detection
             if (Rect.intersects(ball.getRectangle(), paddle.getRectangle())) {
 
-                System.out.println("Ball Top : " + ball.getRectangle().top + "-Ball Bottom : " + ball.getRectangle().bottom
-                        + "-Ball Left : " + ball.getRectangle().left + "-Ball Right : " + ball.getRectangle().right);
-                System.out.println("Paddle Top : " + paddle.getRectangle().top + "-Paddle Bottom : " + paddle.getRectangle().bottom
-                        + "-Paddle Left : " + paddle.getRectangle().left + "-Paddle Right : " + paddle.getRectangle().right);
+//                System.out.println("Ball Top : " + ball.getRectangle().top + "-Ball Bottom : " + ball.getRectangle().bottom
+//                        + "-Ball Left : " + ball.getRectangle().left + "-Ball Right : " + ball.getRectangle().right);
+//                System.out.println("Paddle Top : " + paddle.getRectangle().top + "-Paddle Bottom : " + paddle.getRectangle().bottom
+//                        + "-Paddle Left : " + paddle.getRectangle().left + "-Paddle Right : " + paddle.getRectangle().right);
 
                 if (CollisionDetectionHelper.topCollision(ball, paddle)) {
                     //Top collision detecion
                     ball.setY(paddle.getRectangle().top - ball.getR());
                     ball.setDy(-ball.getDy());
+                    ball.setDx(calculateBounceOffset(ball.getDx(), ball.getDy()));
 
-                    System.out.println("Paddle Top Collision Occured");
                 }else if(CollisionDetectionHelper.bottomCollision(ball, paddle)){
                     ball.setY(paddle.getRectangle().top - ball.getR());
                     ball.setDy(-ball.getDy());
+                    ball.setDx(calculateBounceOffset(ball.getDx(), ball.getDy()));
 
-                    System.out.println("Paddle Bottom Collision Occured");
                 }else if(CollisionDetectionHelper.sideCollision(ball, paddle)){
                     //Side collision detection
                     if(ball.getRectangle().centerX() < paddle.getRectangle().centerX()){
@@ -178,13 +179,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
                         ball.setX(paddle.getX() + paddle.getWidth() + ball.getR());
                     }
 
-                    ball.setDx(-ball.getDx());
+                    ball.setDx(-calculateBounceOffset(ball.getDx(), ball.getDy()));
                     ball.setDy(-ball.getDy());
-                    System.out.println("Paddle Side Collision Occured");
                 }else{
                     //Other collision detection
                     ball.setDx(-ball.getDx());
-                    System.out.println("Paddle Other Collision Occured");
                 }
             }
 
@@ -196,24 +195,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
                     if(Rect.intersects(ball.getRectangle(), bricks.get(levelIdx).get(rowIdx).getRectangle())){
                         if(CollisionDetectionHelper.bottomCollision(ball, bricks.get(levelIdx).get(rowIdx))){
                             ball.setDy(-ball.getDy());
+                            ball.setDx(calculateBounceOffset(ball.getDx(), ball.getDy()));
                             bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
 
-                            System.out.println("Brick Bottom Collision Occured");
                         }else if(CollisionDetectionHelper.topCollision(ball, bricks.get(levelIdx).get(rowIdx))){
                             ball.setDy(-ball.getDy());
+                            ball.setDx(calculateBounceOffset(ball.getDx(), ball.getDy()));
                             bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
 
-                            System.out.println("Brick Top Collision Occured");
                         }else if(CollisionDetectionHelper.sideCollision(ball, bricks.get(levelIdx).get(rowIdx))){
-                            ball.setDx(-ball.getDx());
+                            ball.setDx(-calculateBounceOffset(ball.getDx(), ball.getDy()));
                             bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
 
-                            System.out.println("Brick Side Collision Occured");
                         }else{
                             ball.setDx(-ball.getDx());
                             bricks.get(levelIdx).get(rowIdx).setHardness(bricks.get(levelIdx).get(rowIdx).getHardness() - 1);
 
-                            System.out.println("Brick Other Collision Occured");
                         }
                     }
 
@@ -233,6 +230,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         }
     }
 
+    // Implemented by Jonathan Tey
     //Call only if game is won
     public void wonGame() {
         time_end = System.currentTimeMillis();
@@ -245,6 +243,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         getContext().startActivity(intent);
     }
 
+    // Implemented by Jonathan Tey
     //Reset all game variables
     public void resetGame(){
         gameStarted = false;
@@ -274,6 +273,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         time_start = System.currentTimeMillis();
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Draw the whole screen every frame
+     */
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -296,6 +299,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         }
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Draw the score on the left bottom of the screen
+     */
     private void drawScore(Canvas canvas) {
         if(gameStarted){
             long time_elapsed = System.currentTimeMillis() - time_start;
@@ -308,6 +315,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
         }
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Update the rotationSensor every time the gravity sensor updates
+     */
     public void updateRotationSensor(float xRotation) {
         //Update ball's x axis acceleration based on how much device tilted along the x axis
         if(gameStarted){
@@ -316,8 +327,28 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Se
 
     }
 
+    /**
+     * Implemented by Fan Lu
+     * Set the ball's speed
+     */
     public void setBallSpeed(double multiplier){
         ballSpeed = (int) Math.round(BASE_SPEED * multiplier);
         ball.setSpeed(ballSpeed);
+    }
+
+    /**
+     * Implemented by Fan Lu
+     * Calculate the ball bounce offset within +- 7 degrees from the angle of impact(dx, dy).
+     */
+    public int  calculateBounceOffset(int dx, int dy){
+        double inRadian = Math.atan2(dy, dx);
+        double inAngle = Math.toDegrees(inRadian);
+
+        double offSet = 14 * random.nextDouble() - 7;
+        double outAngle = inAngle + offSet;
+
+        int outDx = (int) (dy / Math.tan(Math.toRadians(outAngle)));
+
+        return outDx;
     }
 }
